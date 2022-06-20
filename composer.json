@@ -1,0 +1,19 @@
+{
+  "name": "wzzwx/yii1-model-extension",
+  "type": "yii1-extension",
+  "description": "yii1 model helper extension",
+  "keywords": ["yii1", "model", "db"],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "wangzheng",
+      "email": "wz152309246@163.com"
+    }
+  ],
+  "require": {},
+  "autoload": {
+    "psr-4": {
+      "wzzwx\\yii1model\\": "src/"
+    }
+  }
+}
