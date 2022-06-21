@@ -2,7 +2,7 @@
 
 namespace wzzwx\yii1model\traits;
 
-class ModelTrait
+trait ModelTrait
 {
     protected static function getDb()
     {
