@@ -10,8 +10,8 @@ class DbCommand extends \CDbCommand
     const LIMIT_MIN = 1;        // 每页最少
     const LIMIT_DEFAULT = 10;   // 每页默认
 
-    public const WITH_TYPE_ONE = 1;    // 一条
-    public const WITH_TYPE_MANY = 2;   // 多条
+    const WITH_TYPE_ONE = 1;    // 一条
+    const WITH_TYPE_MANY = 2;   // 多条
 
     public static $pageSize;
 
@@ -59,10 +59,10 @@ class DbCommand extends \CDbCommand
     public function paging($pageSize = null, $page = null)
     {
         if (is_null($page)) {
-            $page = $_POST['page'] ?? $_GET['page'] ?? 1;
+            $page = isset($_POST['page']) ? $_POST['page'] : (isset($_GET['page']) ? $_GET['page'] : 1);
         }
         if (is_null($pageSize)) {
-            $pageSize = $_POST['pageSize'] ?? $_GET['pageSize'] ?? self::LIMIT_DEFAULT;
+            $pageSize = isset($_POST['pageSize']) ? $_POST['pageSize'] : (isset($_GET['pageSize']) ? $_GET['pageSize'] : self::LIMIT_DEFAULT);
         }
 
         $page = max(1, intval($page));
@@ -73,7 +73,7 @@ class DbCommand extends \CDbCommand
             ->offset(($page - 1) * $pageSize);
     }
 
-    public function count($countSql = 'count(*)'): int
+    public function count($countSql = 'count(*)')
     {
         return (int)(clone $this)->setText('')
             ->select($countSql)
@@ -127,7 +127,7 @@ class DbCommand extends \CDbCommand
      *     'business',                                      // model 中配置了静态方法 withConfigs()
      *     'business' => function($query, &$with){          // model 中配置了静态方法 withConfigs(), 并对query或其他配置项做额外处理
      *         $query->andWhere(['status' => 1])->with('xxx');
-     *         $with['callback'] = [TbHdcode::class, 'outHandel'];
+     *         $with['callback'] = [TbBusiness::class, 'outHandle'];
      *     },
      * ]
      * @return static
@@ -152,7 +152,7 @@ class DbCommand extends \CDbCommand
                 continue;
             }
             if (is_string($key)) {
-                [$fun, $item] = [$item, $key];
+                list($fun, $item) = [$item, $key];
             }
             if (!isset($conf[$item])) {
                 throw new \Exception($this->modelClassName . '未定义with配置: ' . $item);
@@ -178,8 +178,8 @@ class DbCommand extends \CDbCommand
         }
         foreach ($this->with as $newFieldsName => $with) {
             $query = $with['query'];
-            $thisField = $with['thisField'] ?? 'id';
-            $targetField = $with['targetField'] ?? 'id';
+            $thisField = isset($with['thisField']) ? $with['thisField'] : 'id';
+            $targetField = isset($with['targetField']) ? $with['targetField'] : 'id';
             $ids = array_column($rets, $thisField);
             $targets = $query->andWhere(['in', $targetField, $ids])->queryAll();
 
@@ -197,7 +197,7 @@ class DbCommand extends \CDbCommand
                 unset($targets[$k]);
             }
             foreach ($rets as &$ret) {
-                $ret[$newFieldsName] = $dics[$ret[$thisField]] ?? [];
+                $ret[$newFieldsName] = isset($dics[$ret[$thisField]]) ? $dics[$ret[$thisField]] : [];
             }
         }
 
@@ -212,8 +212,8 @@ class DbCommand extends \CDbCommand
         }
         foreach ($this->with as $newFieldsName => $with) {
             $query = $with['query'];
-            $thisField = $with['thisField'] ?? 'id';
-            $targetField = $with['targetField'] ?? 'id';
+            $thisField = isset($with['thisField']) ? $with['thisField'] : 'id';
+            $targetField = isset($with['targetField']) ? $with['targetField'] : 'id';
             $id = $ret[$thisField];
             $targets = $query->andWhere([$targetField => $id])->queryAll();
             if (isset($with['callback']) && is_callable($with['callback'])) {

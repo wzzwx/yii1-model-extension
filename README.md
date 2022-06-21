@@ -138,7 +138,7 @@ $ret = UserModel::query()
         ->with('order')
         ->andWhere(['user_id' => 123]);
 
-    $list = $query()
+    $list = $query
         ->pageing(10, 1)
         // ->pageing()          // 默认取 page 和 pageSize 参数的值
         ->queryAll();           // 分页数据

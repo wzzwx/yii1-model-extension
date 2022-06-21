@@ -34,7 +34,7 @@ class ModelTrait
             unset($data[$primaryKey]);
         }
 
-        if ($data[$primaryKey] ?? false) {
+        if (isset($data[$primaryKey]) && $data[$primaryKey]) {
             $conditions = [$primaryKey => $data[$primaryKey]];
             unset($data[$primaryKey]);
 
@@ -51,7 +51,7 @@ class ModelTrait
     public static function update(array $data, $condition, $params = [])
     {
         $cmd = static::createCommand();
-        [$condition, $params] = $cmd->buildCondition($condition, $params);
+        list($condition, $params) = $cmd->buildCondition($condition, $params);
 
         return $cmd->update(static::$table, $data, $condition, $params);
     }
@@ -59,7 +59,7 @@ class ModelTrait
     public static function delete($condition, $params = [])
     {
         $cmd = static::createCommand();
-        [$condition, $params] = $cmd->buildCondition($condition, $params);
+        list($condition, $params) = $cmd->buildCondition($condition, $params);
 
         return $cmd->delete(static::$table, $condition, $params);
     }
