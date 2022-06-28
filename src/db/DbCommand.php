@@ -160,7 +160,7 @@ class DbCommand extends \CDbCommand
             $ret[$item] = $conf[$item];
             $ret[$item]['query'] = clone $ret[$item]['query'];
             if (isset($fun) && is_callable($fun)) {
-                call_user_func($fun, $ret[$item]['query'], $ret[$item]);
+                $fun($ret[$item]['query'], $ret[$item]);
             }
         }
 

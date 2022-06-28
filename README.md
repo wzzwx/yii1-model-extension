@@ -120,6 +120,7 @@ $ret = UserModel::query()
     $ret = OrderModel::query()
        ->with([
             'user',
+            // 'user' => fn($query) => $query->select('id,name,age'),  // php7.4 简写
             'items' => function($query){
                 $query->select('xx,xx')
                     ->andWhere(['status' => xxx])     // 增加条件筛选
