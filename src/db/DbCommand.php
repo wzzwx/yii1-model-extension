@@ -144,6 +144,7 @@ class DbCommand extends \CDbCommand
         }
         $ret = [];
         foreach ($with as $key => $item) {
+            $fun = null;
             if (is_array($item)) {
                 if (!isset($item['query'])) {
                     throw new \Exception('with配置错误: 缺少query');
